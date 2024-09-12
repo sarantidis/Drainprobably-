@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Drain Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            font-size: 1.3em;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Battery Drain Calculator</h2>
+        <p>Calculate the probability of a given mA draw draining a battery to 70% over a period of time.</p>
+
+        <label for="batteryCapacity">Battery Capacity (Amp-Hours):</label>
+        <input type="number" id="batteryCapacity" placeholder="e.g., 100" required>
+
+        <label for="currentDraw">Current Draw (mA):</label>
+        <input type="number" id="currentDraw" placeholder="e.g., 500" required>
+
+        <label for="hours">Duration (hours):</label>
+        <input type="number" id="hours" placeholder="e.g., 8" required>
+
+        <button onclick="calculateProbability()">Calculate</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateProbability() {
+            const batteryCapacity = document.getElementById('batteryCapacity').value;
+            const currentDraw = document.getElementById('currentDraw').value;
+            const hours = document.getElementById('hours').value;
+
+            if (!batteryCapacity || !currentDraw || !hours) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            // Convert battery capacity from Ah to mAh
+            const batteryCapacitymAh = batteryCapacity * 1000;
+
+            // Calculate the amount of charge that needs to be drained to reach 70% SOC
+            const drainNeededmAh = batteryCapacitymAh * 0.30;
+
+            // Calculate the total mAh drained by the input current over the specified time
+            const drainedmAh = currentDraw * hours;
+
+            // Calculate the probability
+            const probability = Math.min((drainedmAh / drainNeededmAh) * 100, 100);
+
+            document.getElementById('result').innerText = `The probability of the battery draining to 70% over ${hours} hours is ${probability.toFixed(2)}%.`;
+        }
+    </script>
+
+</body>
+</html>
